@@ -1,0 +1,32 @@
+body {
+    font-family: 'Eczar', serif;
+    /* background-image: url("../images/titan.jpg");
+    background-size: cover;
+    background-repeat: no-repeat; */
+    /* text-align: center; */
+}
+
+.gf-rubik {
+    font-family: 'Rubik', sans-serif;
+}
+
+.gf-eczar {
+    font-family: 'Eczar', serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+.btn {
+    font-family: 'Rubik', sans-serif;
+    color: #fff !important; /* Bootstrap overrides color if no href */
+}
