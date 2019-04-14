@@ -11,11 +11,16 @@ Other features
 
 # What's New
 
-0.3
+0.4
 
-* Added interval timer
+* Dynamically responds to correct and incorrect answers
 * Display questions and choices on the game screen
 * Added click event to choices
+* Added questions to trivia pack
+* Updated display object to replace previous questions and choices
+* Added function to randomly select questions
+* Added click to next question (from answer page)
+* Cleaned up code
 
 # Instructions
 
@@ -23,5 +28,6 @@ Other features
 
 [Issue] Scope change causes this.initialize to error out in display object
 [Issue] Timeout timer needs to be removed & timer object needs to be refactored
+[Issue] Choice value is interpreted as string, causing type mismatch
 
 # References
