@@ -4,10 +4,32 @@ $(document).ready(function () {
 
   var game = {
     status: "start", // start, question, answer, game over
-    duration: 4,
-    timeStart: 5,
-    timeRemaining: 0,
-    questionsLeft: [], // tracks the index of the questions left 
+    duration: 4, // Rounds of questions to ask
+    guess: "",
+    timer: {
+      question: {
+        reference: "",
+        start: 5,
+        remaining: 0
+      },
+      answer: {
+        reference: "",
+        start: 5,
+        remaining: 0
+      }
+    },
+    questionsLeft: {
+      array: [], // Tracks the index of the questions left to avoid asking repeated questions
+      update: function (index) { // Removes the last asked question's index from the array
+        var i;
+
+        for (i = 0; i < this.array.length; i++) {
+          if (this.array[i] === index) {
+            this.array.splice(i, 1);
+          }
+        }
+      }
+    },
     summary: {
       total: 0,
       correct: 0,
@@ -30,24 +52,13 @@ $(document).ready(function () {
     }
   };
 
-  var display = { // Question to TAs: How would one go about simplifying this object, since function calls need to be synchronous with the timer
-    initialize: function () {
-      $("#start").addClass("hide");
-      $("#question").addClass("hide");
-      $("#answer").addClass("hide");
-      $("#game-over").addClass("hide");
-    },
-    start: function () {
-      this.initialize();
-      $("#start").removeClass("hide");
-    },
+  // Question to TAs: How would one go about simplifying this object, since function calls need to be synchronous with the timer
+  // Removed initialization function: scoping issue generated errors, and function was sometimes redundant
+  var display = {
     question: function (text, array) {
       var questionDiv = $("<div>");
       var i;
 
-      // this.initialize();
-
-      // Fix for scope change
       $("#start").addClass("hide");
       $("#answer").addClass("hide");
       $("#game-over").addClass("hide");
@@ -79,9 +90,7 @@ $(document).ready(function () {
       // this.initialize();
 
       // Fix for scope change
-      $("#start").addClass("hide");
       $("#question").addClass("hide");
-      $("#game-over").addClass("hide");
 
       // Initialize containers
       $("#answer-message").empty();
@@ -102,7 +111,7 @@ $(document).ready(function () {
         else {
           messageDiv.html("wrong!");
         }
-        
+
         correctDiv.html("the correct answer is " + message);
         gifDiv.attr("src", image.incorrect);
 
@@ -120,8 +129,6 @@ $(document).ready(function () {
       // this.initialize();
 
       // Fix for scope change
-      $("#start").addClass("hide");
-      $("#question").addClass("hide");
       $("#answer").addClass("hide");
 
       $("#game-over").removeClass("hide");
@@ -207,26 +214,43 @@ $(document).ready(function () {
     ]
   };
 
+  // Events
   $(document).on("click", "#start-btn", start);
   $(document).on("click", ".guess", guess);
   $(document).on("click", "#answer-btn", next);
+  $(document).on("click", "#reset-btn", start);
 
-
-  function start() {
+  // Initialization functions
+  function initializeGame() {
     var i;
 
-    // Initialize timer
-    game.timeRemaining = game.timeStart;
+    // Initialize game properties
+    game.summary.total = 0;
+    game.summary.correct = 0;
+    game.summary.incorrect = 0;
+    game.summary.unanswered = 0;
 
+    // Reset timers
+    game.timer.question.remaining = game.timer.question.start;
+    game.timer.answer.remaining = game.timer.answer.start;
+
+    // Initialize game.questionsLeft array and fill with values
     for (i = 0; i < trivia.questions.length; i++) {
-      game.questionsLeft[i] = i;
+      game.questionsLeft.array[i] = i;
     }
+  }
 
+  // Main functions
+  function start() {
+
+    initializeGame();
+    
+    game.status = "ask question";
+    
     askQuestion();
   }
 
-  // Asks player a new question and provides guesses
-  function askQuestion() {
+  function askQuestion() { // Asks player a new question and provides guesses
 
     // Randomly index a question from the trivia pack
     var index = rng(trivia.questions);
@@ -238,23 +262,142 @@ $(document).ready(function () {
     var answer = trivia.questions[index].answer;
     var gif = trivia.questions[index].gif;
 
-    updateTracker(index);
-
     game.getQuestion(id, question, guesses, answer, gif);
+    game.questionsLeft.update(index);
 
-    display.question(game.currentQuestion.text, game.currentQuestion.guesses);
-    display.updateTimer(game.timeRemaining); // Initialize the countdown timer
-
-    run();
+    updateDisplay("true");
+    startQuestionTimer();
   }
 
-  // Updates array of questions left to avoid repeated questions
-  function updateTracker(index) {
-    var i;
+  function guess() {
+    game.guess = $(this).attr("data-value");
 
-    for (i = 0; i < game.questionsLeft.length; i++) {
-      if (game.questionsLeft[i] === index) {
-        game.questionsLeft.splice(i, 1);
+    stopQuestionTimer();
+
+    if (game.guess == game.currentQuestion.answer) {
+      game.summary.correct++;
+    }
+    else {
+      game.summary.incorrect++;
+    }
+
+    game.status = "show answer";
+
+    updateDisplay("true");
+
+    startAnswerTimer();
+  }
+
+  function next() {
+    if (game.questionsLeft.array.length === 0) {
+      game.status = "game over";
+
+      updateDisplay("true");
+    }
+    else {
+      game.status = "ask question";
+      
+      askQuestion();
+    }
+
+    stopAnswerTimer();
+  }
+
+  function updateDisplay(message) {
+
+    if (message === "time expired") {
+      display.answer(4,
+        game.currentQuestion.answer,
+        game.currentQuestion.guesses[game.currentQuestion.answer],
+        game.currentQuestion.gif);
+    }
+    else if (message === "update timer") {
+      display.updateTimer(game.timer.question.remaining);
+    }
+    else if (game.status === "ask question") {
+      display.question(game.currentQuestion.text, game.currentQuestion.guesses);
+      display.updateTimer(game.timer.question.remaining); // Initialize the countdown timer
+    }
+    else if (game.status === "show answer") {
+      display.answer(game.guess,
+        game.currentQuestion.answer,
+        game.currentQuestion.guesses[game.currentQuestion.answer],
+        game.currentQuestion.gif);
+    }
+    else if (game.status === "game over") {
+      display.gameOver(game.summary.correct, game.summary.incorrect, game.summary.unanswered);
+    }
+  }
+
+  // Timers
+
+  function startQuestionTimer() {
+    game.timer.question.reference = setInterval(countdown, 1000);
+
+    console.log("Question timer started");
+  }
+
+  function startAnswerTimer() {
+    game.timer.answer.reference = setInterval(countdownHidden, 1000);
+
+    console.log("Answer timer started");
+  }
+
+  function stopQuestionTimer() {
+    clearInterval(game.timer.question.reference);
+
+    game.timer.question.remaining = game.timer.question.start;
+    game.summary.total++;
+
+    console.log("Question timer stopped");
+  }
+
+  function stopAnswerTimer() {
+    clearInterval(game.timer.answer.reference);
+
+    game.timer.answer.remaining = game.timer.answer.start;
+
+    console.log("Answer timer stopped");
+  }
+
+  function countdown() {
+    game.timer.question.remaining--;
+
+    console.log("Question timer: " + game.timer.question.remaining);
+
+    if (game.timer.question.remaining === 0) {
+
+      stopQuestionTimer();
+
+      game.summary.unanswered++;
+
+      game.status = "show answer"
+
+      updateDisplay("time expired");
+
+      startAnswerTimer();
+    }
+    
+    updateDisplay("update timer");
+  }
+
+  function countdownHidden() {
+    game.timer.answer.remaining--;
+
+    console.log("Answer timer: " + game.timer.answer.remaining);
+
+    if (game.timer.answer.remaining === 0) {
+      stopAnswerTimer();
+
+      if (game.questionsLeft.array.length === 0) {
+        game.status = "game over";
+
+        updateDisplay("true");
+      }
+      else {
+        game.status = "ask question";
+
+        askQuestion();
       }
     }
   }
@@ -263,75 +406,13 @@ $(document).ready(function () {
   function rng(array) {
     var index = 0;
 
-    if (game.questionsLeft.length === index) {
+    if (game.questionsLeft.array.length === index) {
       return game.questionsLeft[0];
     }
     else {
-      index = Math.floor(Math.random() * game.questionsLeft.length);
+      index = Math.floor(Math.random() * game.questionsLeft.array.length);
 
-      return game.questionsLeft[index];
+      return game.questionsLeft.array[index];
     }
   }
-
-  function guess() {
-    userGuess = $(this).attr("data-value");
-
-    stop();
-
-    if (userGuess == game.currentQuestion.answer) {
-      game.summary.correct++;
-    }
-    else {
-      game.summary.incorrect++;
-    }
-
-    display.answer(userGuess,
-      game.currentQuestion.answer,
-      game.currentQuestion.guesses[game.currentQuestion.answer],
-      game.currentQuestion.gif);
-  }
-
-  function next() {
-    if (game.questionsLeft.length === 0) {
-      display.gameOver(game.summary.correct, game.summary.incorrect, game.summary.unanswered);
-    }
-    else {
-      askQuestion();
-    }
-  }
-
-  function run() {
-    player = setInterval(countdown, 1000);
-  }
-
-  function stop() {
-    clearInterval(player);
-    game.timeRemaining = game.timeStart;
-    game.summary.total++;
-  }
-
-  function countdown() {
-    game.timeRemaining--;
-
-    if (game.timeRemaining === 0) {
-      stop();
-
-      game.summary.unanswered++;
-      display.answer(4,
-        game.currentQuestion.answer,
-        game.currentQuestion.guesses[game.currentQuestion.answer],
-        game.currentQuestion.gif);
-    }
-
-    console.log(game.timeRemaining);
-
-    display.updateTimer(game.timeRemaining);
-  }
-
-  function random() {
-    rand = Math.floor(Math.random() * trivia.questions.length);
-
-    return rand;
-  }
-
 });
