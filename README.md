@@ -11,16 +11,9 @@ Other features
 
 # What's New
 
-0.4
+0.5
 
-* Dynamically responds to correct and incorrect answers
-* Display questions and choices on the game screen
-* Added click event to choices
-* Added questions to trivia pack
-* Updated display object to replace previous questions and choices
-* Added function to randomly select questions
-* Added click to next question (from answer page)
-* Cleaned up code
+* Publish stats
 
 # Instructions
 

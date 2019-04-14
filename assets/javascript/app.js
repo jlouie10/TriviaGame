@@ -112,7 +112,11 @@ $(document).ready(function () {
       $("#answer-message").prepend(messageDiv); // prepend to put message before correct answer
       $("#answer-gif").append(gifDiv);
     },
-    gameOver: function () {
+    gameOver: function (correct, incorrect, unanswered) {
+      var array = [correct, incorrect, unanswered];
+      var scoreboardDiv = $("<div>");
+      var i;
+
       // this.initialize();
 
       // Fix for scope change
@@ -121,6 +125,16 @@ $(document).ready(function () {
       $("#answer").addClass("hide");
 
       $("#game-over").removeClass("hide");
+
+      $("#scoreboard").empty();
+
+      for (i = 0; i < array.length; i++) {
+        var newDiv = $("<div>");
+        newDiv.html(array[i]);
+        scoreboardDiv.append(newDiv);
+      }
+
+      $("#scoreboard").append(scoreboardDiv);
     },
     updateTimer: function (number) {
       $("#question-timer").html("<span>" + number + "</span>")
@@ -264,7 +278,7 @@ $(document).ready(function () {
 
     stop();
 
-    if (userGuess === game.currentQuestion.answer) {
+    if (userGuess == game.currentQuestion.answer) {
       game.summary.correct++;
     }
     else {
@@ -279,7 +293,7 @@ $(document).ready(function () {
 
   function next() {
     if (game.questionsLeft.length === 0) {
-      display.gameOver();
+      display.gameOver(game.summary.correct, game.summary.incorrect, game.summary.unanswered);
     }
     else {
       askQuestion();
