@@ -11,18 +11,13 @@ Other features
 
 # What's New
 
-0.6
-
-* Ask next question after timer expires
-* Updated reset button
-* Updated state changes
+* Added to trivia pack
+* Updated UI
 
 # Instructions
 
 # Issues ([Feature], [Bug])
 
-* [Issue] Scope change causes this.initialize to error out in display object
-* [Issue] Timeout timer needs to be removed & timer object needs to be refactored
 * [Issue] Choice value is interpreted as string, causing type mismatch
 
 # References

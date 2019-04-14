@@ -1,7 +1,4 @@
 $(document).ready(function () {
-  var player;
-  var computer;
-
   var game = {
     status: "start", // start, question, answer, game over
     duration: 4, // Rounds of questions to ask
@@ -9,7 +6,7 @@ $(document).ready(function () {
     timer: {
       question: {
         reference: "",
-        start: 5,
+        start: 15,
         remaining: 0
       },
       answer: {
@@ -76,10 +73,11 @@ $(document).ready(function () {
         var guessDiv = $("<div>");
 
         guessDiv.html(array[i])
-        guessDiv.addClass("guess");
+        guessDiv.addClass("guess btn btn-primary btn-lg");
         guessDiv.attr("data-value", i);
 
         $("#guess-container").append(guessDiv);
+        $("#guess-container").append("<br>");
       }
     },
     answer: function (guess, answer, message, image) {
@@ -87,9 +85,6 @@ $(document).ready(function () {
       var correctDiv = $("<div>");
       var gifDiv = $("<img>");
 
-      // this.initialize();
-
-      // Fix for scope change
       $("#question").addClass("hide");
 
       // Initialize containers
@@ -106,13 +101,13 @@ $(document).ready(function () {
       }
       else {
         if (guess === 4) {
-          messageDiv.html("time's up!");
+          messageDiv.html("Time's Up!");
         }
         else {
-          messageDiv.html("wrong!");
+          messageDiv.html("Sorry, that's incorrect!");
         }
 
-        correctDiv.html("the correct answer is " + message);
+        correctDiv.html("The correct answer is " + message);
         gifDiv.attr("src", image.incorrect);
 
         $("#answer-message").append(correctDiv);
@@ -122,29 +117,25 @@ $(document).ready(function () {
       $("#answer-gif").append(gifDiv);
     },
     gameOver: function (correct, incorrect, unanswered) {
-      var array = [correct, incorrect, unanswered];
-      var scoreboardDiv = $("<div>");
+      var correctDiv = $("<div>");
+      var incorrectDiv = $("<div>");
+      var unansweredDiv = $("<div>");
       var i;
 
-      // this.initialize();
-
-      // Fix for scope change
       $("#answer").addClass("hide");
 
       $("#game-over").removeClass("hide");
 
       $("#scoreboard").empty();
 
-      for (i = 0; i < array.length; i++) {
-        var newDiv = $("<div>");
-        newDiv.html(array[i]);
-        scoreboardDiv.append(newDiv);
-      }
+      correctDiv.html("<span>Correct Answers: " + correct + "</span>");
+      incorrectDiv.html("<span>Incorrect Answers: " + incorrect + "</span>");
+      unansweredDiv.html("<span>Unanswered Questions: " + unanswered + "</span>");
 
-      $("#scoreboard").append(scoreboardDiv);
+      $("#scoreboard").append(correctDiv, incorrectDiv, unansweredDiv);
     },
     updateTimer: function (number) {
-      $("#question-timer").html("<span>" + number + "</span>")
+      $("#question-timer").html("<span>Time Remaining: " + number + "</span>")
     }
   };
 
@@ -153,7 +144,7 @@ $(document).ready(function () {
     questions: [
       {
         id: 0,
-        text: "Michael Jordan played college basketball at which university?",
+        text: "Which university did Michael Jordan play college basketball at?",
         guesses: [
           "UCLA",
           "Kentucky",
@@ -168,14 +159,14 @@ $(document).ready(function () {
       },
       {
         id: 1,
-        text: "How many Super Bowls has Tom Brady won?",
+        text: "How many championships has LeBron James won with the Cleveland Caveliers?",
         guesses: [
+          "One",
+          "Two",
           "Three",
-          "Four",
-          "Five",
-          "Six"
+          "Four"
         ],
-        answer: 3,
+        answer: 0,
         gif: {
           correct: "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
           incorrect: "https://media.giphy.com/media/ceeN6U57leAhi/giphy.gif"
@@ -183,6 +174,36 @@ $(document).ready(function () {
       },
       {
         id: 2,
+        text: "Tom Brady was the backup for which NFL quarterback?",
+        guesses: [
+          "Joe Montana",
+          "Brett Favre",
+          "Drew Bledsoe",
+          "Peyton Manning"
+        ],
+        answer: 2,
+        gif: {
+          correct: "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
+          incorrect: "https://media.giphy.com/media/ceeN6U57leAhi/giphy.gif"
+        }
+      },
+      {
+        id: 3,
+        text: "Who did the Chicago Bears beat to win the Super Bowl XX in 1986?",
+        guesses: [
+          "Miami Dolphins",
+          "New England Patriots",
+          "Pittsburgh Steelers",
+          "Green Bay Packers"
+        ],
+        answer: 1,
+        gif: {
+          correct: "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
+          incorrect: "https://media.giphy.com/media/ceeN6U57leAhi/giphy.gif"
+        }
+      },
+      {
+        id: 4,
         text: "Which male tennis player holds the record for most Grand Slam wins ever?",
         guesses: [
           "Björn Borg",
@@ -197,22 +218,53 @@ $(document).ready(function () {
         }
       },
       {
-        id: 3,
-        text: "Baseball's award for best pitcher is named after which player?",
+        id: 5,
+        text: "Tiger Woods's 14 major wins is second all time behind which golfer?",
         guesses: [
-          "Babe Ruth",
-          "Cy Young",
-          "Nolan Ryan",
-          "Roger Clemens"
+          "Arnold Palmer",
+          "Jack Nicklaus",
+          "Phil Mickelson",
+          "Rory McIlroy"
         ],
         answer: 1,
         gif: {
           correct: "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
           incorrect: "https://media.giphy.com/media/ceeN6U57leAhi/giphy.gif"
         }
-      }
+      },
+      {
+        id: 6,
+        text: "Who holds the records for most home runs in a baseball career?",
+        guesses: [
+          "Babe Ruth",
+          "Willie Mays",
+          "Hank Aaron",
+          "Barry Bonds"
+        ],
+        answer: 3,
+        gif: {
+          correct: "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
+          incorrect: "https://media.giphy.com/media/ceeN6U57leAhi/giphy.gif"
+        }
+      },
+      {
+        id: 7,
+        text: "Which Chicago Cubs player, current or former, is tied for the record for most strikeouts thrown in a MLB game?",
+        guesses: [
+          "Greg Maddux",
+          "Kerry Wood",
+          "Mark Prior",
+          "Jake Arieta"
+        ],
+        answer: 1,
+        gif: {
+          correct: "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
+          incorrect: "https://media.giphy.com/media/ceeN6U57leAhi/giphy.gif"
+        }
+      },
     ]
   };
+
 
   // Events
   $(document).on("click", "#start-btn", start);
@@ -220,7 +272,9 @@ $(document).ready(function () {
   $(document).on("click", "#answer-btn", next);
   $(document).on("click", "#reset-btn", start);
 
+
   // Initialization functions
+
   function initializeGame() {
     var i;
 
@@ -240,7 +294,9 @@ $(document).ready(function () {
     }
   }
 
+
   // Main functions
+
   function start() {
 
     initializeGame();
@@ -289,14 +345,14 @@ $(document).ready(function () {
   }
 
   function next() {
-    if (game.questionsLeft.array.length === 0) {
+    if (game.questionsLeft.array.length === game.duration) {
       game.status = "game over";
 
       updateDisplay("true");
     }
     else {
       game.status = "ask question";
-      
+
       askQuestion();
     }
 
@@ -328,6 +384,7 @@ $(document).ready(function () {
       display.gameOver(game.summary.correct, game.summary.incorrect, game.summary.unanswered);
     }
   }
+
 
   // Timers
 
@@ -389,7 +446,7 @@ $(document).ready(function () {
     if (game.timer.answer.remaining === 0) {
       stopAnswerTimer();
 
-      if (game.questionsLeft.array.length === 0) {
+      if (game.questionsLeft.array.length === game.duration) {
         game.status = "game over";
 
         updateDisplay("true");
@@ -402,8 +459,10 @@ $(document).ready(function () {
     }
   }
 
-  // Random number generator that returns the index of a question that hasn't been asked
-  function rng(array) {
+
+  // Additional functions
+
+  function rng(array) { // Random number generator that returns the index of a question that hasn't been asked
     var index = 0;
 
     if (game.questionsLeft.array.length === index) {

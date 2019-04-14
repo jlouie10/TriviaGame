@@ -1,9 +1,19 @@
 body {
     font-family: 'Eczar', serif;
-    /* background-image: url("../images/titan.jpg");
+    background-image: url("../images/background.jpg");
     background-size: cover;
-    background-repeat: no-repeat; */
-    /* text-align: center; */
+    background-repeat: no-repeat;
+}
+
+.outer .container .row .col-12 {
+    background-color: #fff;
+    max-width: 960px;
+    width: 100%;
+    min-height: 522px; 
+    margin: 60px auto;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 13px 27px -5px rgba(50,50,93,.25), 0 8px 16px -8px rgba(0,0,0,.3), 0 -6px 16px -6px rgba(0,0,0,.025);
 }
 
 .gf-rubik {
@@ -15,7 +25,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
 }
 
 .show {
@@ -28,5 +38,23 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn {
     font-family: 'Rubik', sans-serif;
-    color: #fff !important; /* Bootstrap overrides color if no href */
+}
+
+.display-4 {
+    font-weight: 400;
+    font-size: 2.5rem;
+}
+
+#question-container div {
+    font-size: 1.5rem;
+}
+
+#question-timer, #answer-message, #answer-correct {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.guess {
+    margin-bottom: 1rem;
+    min-width: 300px;
 }

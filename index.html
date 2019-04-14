@@ -24,45 +24,66 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-    <title>Trivia Game</title>
+    <title>Sports Trivia Night</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 </head>
 
 <body>
-    <div class="jumbotron">
-        <div id="start">
-            <h1 class="display-4">Trivia Game</h1>
-            <p class="lead">Content goes here.</p>
-            <hr class="my-4">
-            <p>Even more content here</p>
-            <a id="start-btn" class="btn btn-primary btn-lg" role="button">Start</a>
-        </div>
 
-        <div id="question" class="hide">
-            <h1 class="display-4">Question 1</h1>
-            <div id="question-timer"></div>
-            <div id="question-container"></div>
-            <hr class="my-4">
-            <div id="guess-container"></div>
+    <div id="start" class="outer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4">Sports Trivia Night</h1>
+                    <hr class="my-4">
+                    <div id="start-btn" class="btn btn-primary btn-lg">Start</div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div id="answer" class="hide">
-            <h1 class="display-4">Answer 1</h1>
-            <div id="answer-message"></div>
-            <div id="answer-correct"></div>
-            <div id="answer-gif"></div>
-            <hr class="my-4">
-            <p>Get ready</p>
-            <a id="answer-btn" class="btn btn-primary btn-lg" role="button">Next</a>
+    <div id="question" class="outer hide">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4">Question</h1>
+                    <div id="question-timer"></div>
+                    <div id="question-container"></div>
+                    <hr class="my-4">
+                    <div id="guess-container"></div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div id="game-over" class="hide">
-            <h1 class="display-4">Game Over</h1>
-            <div id="scoreboard"></div>
-            <hr class="my-4">
-            <a id="reset-btn" class="btn btn-primary btn-lg" role="button">Restart</a>
+    <div id="answer" class="outer hide">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4">Answer</h1>
+                    <div id="answer-message"></div>
+                    <div id="answer-correct"></div>
+                    <div id="answer-gif"></div>
+                    <hr class="my-4">
+                    <p>Get ready</p>
+                    <div id="answer-btn" class="btn btn-primary btn-lg">Next</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over" class="outer hide">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4">Game Over</h1>
+                    <div id="scoreboard"></div>
+                    <hr class="my-4">
+                    <div id="reset-btn" class="btn btn-primary btn-lg" role="button">Restart</div>
+                </div>
+            </div>
         </div>
     </div>
 
